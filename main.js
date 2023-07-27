@@ -3,11 +3,12 @@ window.onload = function() {
     let canvasHeight = 600;
     let blockSize = 30;
     let ctx;
-    let delay = 100;
+    let delay = 85;
     let snakee;
     let applee;
     let widthInBlocks = canvasWidth/blockSize;
     let heightInBlocks = canvasHeight/blockSize;
+    let score
   
     init();
   
@@ -15,11 +16,15 @@ window.onload = function() {
       let canvas = document.createElement('canvas');
       canvas.width = canvasWidth;
       canvas.height = canvasHeight;
-      canvas.style.border = "1px solid";
+      canvas.style.border = "20px solid grey";
+      canvas.style.margin = "50px auto"
+      canvas.style.display = "block"
+      canvas.style.backgroundColor = "#ddd"
       document.body.appendChild(canvas);
       ctx = canvas.getContext('2d');
       snakee = new Snake([[6, 4], [5, 4], [4, 4]], "right");
       applee = new Apple([10, 10]);
+      score = 0
       refreshCanvas();
     }
   
@@ -32,6 +37,7 @@ window.onload = function() {
       else{
         if (snakee.isEatingApple(applee))
         {
+          score++;
           snakee.eatApple = true;
           do
           {
@@ -43,6 +49,7 @@ window.onload = function() {
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         snakee.draw();
         applee.draw();
+        drawScore();
         setTimeout(refreshCanvas, delay);
       }
       
@@ -60,7 +67,14 @@ window.onload = function() {
     {
       snakee = new Snake([[6, 4], [5, 4], [4, 4]], "right");
       applee = new Apple([10, 10]);
+      score = 0
       refreshCanvas();
+    }
+    function drawScore()
+    {
+      ctx.save();
+      ctx.fillText(score.toString(), 5, canvasHeight - 5);
+      ctx.restore();
     }
   
     function drawBlock(ctx, position) {
@@ -135,7 +149,7 @@ window.onload = function() {
         let wallCollision = false;
         let snakeCollision = false;
         let head = this.body [0];
-        let rest = this.body.slice (1);
+       // let rest = this.body.slice (1);
         let snakeX = head[0];
         let snakeY = head[1];
         let minX = 0;
@@ -149,10 +163,9 @@ window.onload = function() {
           wallCollision = true;
         }
 
-        for (let i = 0; i<rest.lenght; i++){
-          if (snakeX == rest[i][0] && snakeY == rest[i][1]){
-            snakeCollision = true;
-            break
+        for (let i = 1; i < this.body.length; i++) {
+          if (this.body[0][0] === this.body[i][0] && this.body[0][1] === this.body[i][1]) {
+            return true;
           }
         }
         return wallCollision || snakeCollision;
