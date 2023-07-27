@@ -6,7 +6,7 @@ window.onload = function() {
     let delay = 100;
     let snakee;
     let applee;
-    let widhtInBlocks = canvasWidth/blockSize;
+    let widthInBlocks = canvasWidth/blockSize;
     let heightInBlocks = canvasHeight/blockSize;
   
     init();
@@ -25,13 +25,20 @@ window.onload = function() {
   
     function refreshCanvas() {
       snakee.advance();
-      if (snakee.checkCollision()){
-        // Game over
+      if (snakee.checkCollision())
+      {
+        gameOver();
       }
       else{
         if (snakee.isEatingApple(applee))
         {
-          applee.setNewPosition()
+          snakee.eatApple = true;
+          do
+          {
+            applee.setNewPosition()
+          }
+          while(applee.isOnSnake(snakee))
+          
         }
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         snakee.draw();
@@ -39,6 +46,21 @@ window.onload = function() {
         setTimeout(refreshCanvas, delay);
       }
       
+    }
+
+    function gameOver()
+      {
+        ctx.save();
+        ctx.fillText("Game Over", 5, 15);
+        ctx.fillText("Appuyez sur la touche Espace pour rejouer", 5, 30)
+        ctx.restore();
+      }
+
+    function restart()
+    {
+      snakee = new Snake([[6, 4], [5, 4], [4, 4]], "right");
+      applee = new Apple([10, 10]);
+      refreshCanvas();
     }
   
     function drawBlock(ctx, position) {
@@ -50,6 +72,7 @@ window.onload = function() {
     function Snake(body, direction) {
       this.body = body;
       this.direction = direction;
+      this.eatApple = false;
       this.draw = function() {
         ctx.save();
         ctx.fillStyle = "#ff0000";
@@ -59,7 +82,9 @@ window.onload = function() {
         ctx.restore();
       };
       this.advance = function() {
+        // @ts-ignore
         let nextPosition = this.body[0].slice();
+        // @ts-ignore
         switch (this.direction) {
           case "left":
             nextPosition[0] -= 1;
@@ -76,8 +101,13 @@ window.onload = function() {
           default:
             throw ("Invalid Direction");
         }
+        // @ts-ignore
         this.body.unshift(nextPosition);
-        this.body.pop();
+        if(!this.eatApple)
+          // @ts-ignore
+          this.body.pop();
+        else
+          this.eatApple = false;
       };
       this.setDirection = function(newDirection) {
         let allowedDirections;
@@ -110,7 +140,7 @@ window.onload = function() {
         let snakeY = head[1];
         let minX = 0;
         let minY = 0;
-        let maxX = widhtInBlocks -1;
+        let maxX = widthInBlocks -1;
         let maxY = heightInBlocks -1;
         let isNotBetweenHorizontalwalls = snakeX < minX || snakeX > maxX;
         let isNotBetweenverticalwalls = snakeY < minY || snakeY > maxY;
@@ -150,16 +180,16 @@ window.onload = function() {
       };
       this.setNewPosition = function()
       {
-        let newX = Math.round(Math.random() * (widhtInBlocks - 1));
+        let newX = Math.round(Math.random() * (widthInBlocks - 1));
         let newY = Math.round(Math.random() * (heightInBlocks - 1));
         this.position = [newX, newY];
       };
       this.isOnSnake = function(snakeToCheck)
       {
         let  isOnSnake = false
-        for (let i=0; i < snakeToCheck.body.lenght; i++)
+        for (let i=0; i < snakeToCheck.body.length; i++)
         {
-          if(this.position[0] === snakeToCheck.body[i][0] && this.position[1] === snakeToCheck[i][1])
+          if(this.position[0] === snakeToCheck.body[i][0] && this.position[1] === snakeToCheck.body[i][1])
           {
             isOnSnake = true
           }
@@ -169,7 +199,7 @@ window.onload = function() {
     }
   
     document.onkeydown = function handleKeyDown(e) {
-      let key = e.key.toString();
+      let key = e.code;
       let newDirection;
       switch (key) {
         case "ArrowLeft":
@@ -184,6 +214,9 @@ window.onload = function() {
         case "ArrowDown":
           newDirection = "down";
           break;
+        case "Space":
+            restart()
+            return;
         default:
           return;
       }
