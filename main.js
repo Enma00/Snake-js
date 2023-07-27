@@ -150,8 +150,9 @@ window.onload = function() {
         }
 
         for (let i = 0; i<rest.lenght; i++){
-          if (snakeX == rest[i][0] && snakeY[i][1]){
+          if (snakeX == rest[i][0] && snakeY == rest[i][1]){
             snakeCollision = true;
+            break
           }
         }
         return wallCollision || snakeCollision;
