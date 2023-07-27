@@ -29,6 +29,10 @@ window.onload = function() {
         // Game over
       }
       else{
+        if (snakee.isEatingApple(applee))
+        {
+          applee.setNewPosition()
+        }
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         snakee.draw();
         applee.draw();
@@ -117,11 +121,18 @@ window.onload = function() {
 
         for (let i = 0; i<rest.lenght; i++){
           if (snakeX == rest[i][0] && snakeY[i][1]){
-            snakeCollision = true
+            snakeCollision = true;
           }
         }
         return wallCollision || snakeCollision;
       };
+      this.isEatingApple = function (appleToEat){
+        let head = this.body[0];
+        if (head[0] === appleToEat.position[0] && head[1] === appleToEat.position[1])
+          return true;
+        else 
+          return false;
+      }
     }
   
     function Apple(position) {
@@ -137,6 +148,24 @@ window.onload = function() {
         ctx.fill();
         ctx.restore();
       };
+      this.setNewPosition = function()
+      {
+        let newX = Math.round(Math.random() * (widhtInBlocks - 1));
+        let newY = Math.round(Math.random() * (heightInBlocks - 1));
+        this.position = [newX, newY];
+      };
+      this.isOnSnake = function(snakeToCheck)
+      {
+        let  isOnSnake = false
+        for (let i=0; i < snakeToCheck.body.lenght; i++)
+        {
+          if(this.position[0] === snakeToCheck.body[i][0] && this.position[1] === snakeToCheck[i][1])
+          {
+            isOnSnake = true
+          }
+        }
+        return isOnSnake
+      }
     }
   
     document.onkeydown = function handleKeyDown(e) {
