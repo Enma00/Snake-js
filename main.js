@@ -1,4 +1,5 @@
 window.onload = function() {
+  //                                                             ----- Variables -----
   let canvasWidth = 900;
   let canvasHeight = 600;
   let blockSize = 30;
@@ -12,6 +13,7 @@ window.onload = function() {
   
   init();
   
+  //                                                              -----functInit-----
   function init() {
     let canvas = document.createElement('canvas');
     canvas.width = canvasWidth;
@@ -28,6 +30,7 @@ window.onload = function() {
     refreshCanvas();
   }
   
+  //                                                             ---- RefrechCanvas -----
   function refreshCanvas() {
     snakee.advance();
     if (snakee.checkCollision()) {
@@ -48,14 +51,16 @@ window.onload = function() {
     }
   }
   
+  //                                                              ----- GameOver -----
   function gameOver() {
     ctx.save();
     ctx.font = "18px Arial";
-    ctx.fillText("Game Over", 5, 17);
-    ctx.fillText("Appuyez sur la touche Espace pour rejouer", 5, 35);
+    ctx.fillText("Game Over", 5, 18);
+    ctx.fillText("Appuyez sur la touche Espace pour rejouer", 5, 37);
     ctx.restore();
   }
   
+  //                                                               ----- restart -----
   function restart() {
     snakee = new Snake([[6, 4], [5, 4], [4, 4]], "right");
     applee = new Apple([10, 10]);
@@ -63,6 +68,7 @@ window.onload = function() {
     refreshCanvas();
   }
   
+  //                                                              ----- DrawScore ----- 
   function drawScore() {
     ctx.save();
     ctx.font = "bold 24px Arial";
@@ -70,12 +76,15 @@ window.onload = function() {
     ctx.restore();
   }
   
+  //                                                               -----DrawBlock-----
   function drawBlock(ctx, position) {
     let x = position[0] * blockSize;
     let y = position[1] * blockSize;
     ctx.fillRect(x, y, blockSize, blockSize);
   }
   
+
+  //                                                             ----- Funct Snake -----
   function Snake(body, direction) {
     this.body = body;
     this.direction = direction;
@@ -91,7 +100,7 @@ window.onload = function() {
         gradient.addColorStop(1, "#002705"); 
         ctx.fillStyle = gradient;
   
-        // Dessiner un cercle pour chaque bloc du serpent
+        //  Cercle pour chaque bloc du serpent
         ctx.beginPath();
         ctx.arc(x, y, blockSize / 2, 0, Math.PI * 2);
         ctx.fill();
@@ -99,6 +108,8 @@ window.onload = function() {
       ctx.restore();
     };
   
+    
+    //                                                            ----- moove -----
     this.advance = function() {
       // @ts-ignore
       let nextPosition = this.body[0].slice();
@@ -128,6 +139,8 @@ window.onload = function() {
         this.eatApple = false;
     };
   
+    
+    //                                                             ----- Allow Direction -----
     this.setDirection = function(newDirection) {
       let allowedDirections;
       switch (this.direction) {
@@ -151,6 +164,7 @@ window.onload = function() {
       }
     };
   
+    //                                                                  -----Collision----- 
     this.checkCollision = function () {
       let wallCollision = false;
       let snakeCollision = false;
@@ -185,6 +199,8 @@ window.onload = function() {
     };
   }
   
+
+  //                                                                     ---- Funct Apple ----
   function Apple(position) {
     this.position = position;
     this.draw = function() {
@@ -214,6 +230,7 @@ window.onload = function() {
     };
   }
   
+//                                                                       ------  KeyBind -----
   document.onkeydown = function handleKeyDown(e) {
     let key = e.code;
     let newDirection;
@@ -237,6 +254,7 @@ window.onload = function() {
         newDirection = "down";
         break;
       case "Space":
+      case "Numpad0":
         restart();
         return;
       default:
