@@ -50,8 +50,9 @@ window.onload = function() {
   
   function gameOver() {
     ctx.save();
-    ctx.fillText("Game Over", 5, 15);
-    ctx.fillText("Appuyez sur la touche Espace pour rejouer", 5, 30);
+    ctx.font = "18px Arial";
+    ctx.fillText("Game Over", 5, 17);
+    ctx.fillText("Appuyez sur la touche Espace pour rejouer", 5, 35);
     ctx.restore();
   }
   
@@ -64,6 +65,7 @@ window.onload = function() {
   
   function drawScore() {
     ctx.save();
+    ctx.font = "bold 24px Arial";
     ctx.fillText(score.toString(), 5, canvasHeight - 5);
     ctx.restore();
   }
@@ -84,10 +86,9 @@ window.onload = function() {
         let x = this.body[i][0] * blockSize + blockSize / 2;
         let y = this.body[i][1] * blockSize + blockSize / 2;
   
-        // Créer un dégradé de couleur pour le serpent
         let gradient = ctx.createLinearGradient(x - blockSize / 2, y - blockSize / 2, x + blockSize / 2, y + blockSize / 2);
-        gradient.addColorStop(0, "#ff0000"); // Couleur au début du bloc (tête)
-        gradient.addColorStop(1, "#800000"); // Couleur à la fin du bloc (arrière)
+        gradient.addColorStop(0, "#00FF20"); 
+        gradient.addColorStop(1, "#002705"); 
         ctx.fillStyle = gradient;
   
         // Dessiner un cercle pour chaque bloc du serpent
@@ -188,7 +189,7 @@ window.onload = function() {
     this.position = position;
     this.draw = function() {
       ctx.save();
-      ctx.fillStyle = "#33cc33";
+      ctx.fillStyle = "#E20000";
       ctx.beginPath();
       let radius = blockSize / 2;
       let x = this.position[0] * blockSize + radius;
